@@ -197,7 +197,6 @@
         <option value="TW,HK,MO">台港澳</option>
       </select>
 
-      <!-- 隱藏欄位存放遊戲值 -->
       <input type="hidden" name="game" id="gameInput" />
 
       <button type="submit">立即儲值</button>
@@ -308,7 +307,28 @@
       });
     }
   });
-</script>
 
-  </body>
+  function getQueryParams() {
+    const params = new URLSearchParams(window.location.search);
+    return {
+      game: params.get("game"),
+      cardNumber: params.get("card"),
+    };
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    const { game, cardNumber } = getQueryParams();
+
+    if (game && gameNameMap[game]) {
+      selectedGame = game;
+      selectedGameNotice.textContent = `✔ 已選擇遊戲：${gameNameMap[game]}`;
+      gameInput.value = game;
+    }
+
+    if (cardNumber) {
+      document.getElementById("cardNumber").value = cardNumber;
+    }
+  });
+</script>
+</body>
 </html>
