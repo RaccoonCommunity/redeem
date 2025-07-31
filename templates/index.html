@@ -165,11 +165,14 @@
 <main>
   <div class="card">
     <h2>商品兌換平台</h2>
-    <div id="selectedGameNotice">尚未選擇遊戲</div>
     <form id="topupForm">
-      <button type="button" id="chooseGameBtn" style="margin-bottom: 18px; width: 100%; background-color: #6366f1; border: none; color: white; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer;">
-        選擇遊戲
-      </button>
+      <label for="gameSelect">遊戲</label>
+      <select id="gameSelect" class="select1" required>
+        <option value="" disabled selected>請選擇遊戲</option>
+        <option value="genshin">原神</option>
+        <option value="starrail">崩壞：星穹鐵道</option>
+        <option value="zzz">絕區零</option>
+      </select>
 
       <label for="cardNumber">卡號</label>
       <input
@@ -210,7 +213,7 @@
 <script>
   let selectedGame = null;
 
-  const chooseGameBtn = document.getElementById("chooseGameBtn");
+  const gameSelect = document.getElementById("gameSelect");
   const selectedGameNotice = document.getElementById("selectedGameNotice");
   const gameInput = document.getElementById("gameInput");
 
@@ -220,47 +223,22 @@
     zzz: "絕區零",
   };
 
-  chooseGameBtn.addEventListener("click", async () => {
-    const result = await Swal.fire({
-      title: "請選擇遊戲",
-      input: "select",
-      inputOptions: {
-        genshin: "原神",
-        starrail: "崩壞：星穹鐵道",
-        zzz: "絕區零",
-      },
-      inputPlaceholder: "請選擇",
-      confirmButtonText: "確認",
-      allowOutsideClick: false,
-      inputValidator: (value) => {
-        if (!value) return "請選擇一個遊戲";
-      },
-    });
-
-    if (result.isConfirmed) {
-      selectedGame = result.value;
-      selectedGameNotice.textContent = `✔ 已選擇遊戲：${gameNameMap[selectedGame]}`;
-      gameInput.value = selectedGame;
-    }
+  gameSelect.addEventListener("change", () => {
+    const selectedGame = gameSelect.value;
+    gameInput.value = selectedGame;
   });
-
-  window.onload = function() {
+  
+  window.onload = function () {
     const game = "{{ game }}";
     const card = "{{ card }}";
-
+  
     if (card) {
       document.getElementById("cardNumber").value = card;
     }
-
+  
     if (game) {
-      const gameNameMap = {
-        genshin: "原神",
-        starrail: "崩壞：星穹鐵道",
-        zzz: "絕區零",
-      };
-      selectedGame = game;
-      document.getElementById("gameInput").value = game;
-      document.getElementById("selectedGameNotice").textContent = `✔ 已選擇遊戲：${gameNameMap[game]}`;
+      gameInput.value = game;
+      gameSelect.value = game;
     }
   };
 
@@ -331,6 +309,7 @@
     }
   });
 </script>
+
 <footer>
   © 2025 狸貓社群工作室 | 保留所有權利
 </footer>

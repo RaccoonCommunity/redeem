@@ -105,7 +105,7 @@ def selenium_api_check(data):
                         else:
                             return False, "❌ API 無資料，請重試或聯繫工作人員"
             except Exception as e:
-                return False, f"❌ API 解析錯誤，請重試或聯繫工作人員: {e}"
+                return False, f"❌ API 解析錯誤，請重試或聯繫工作人員"
 
         return False, "❌ API 回應異常，請重試或聯繫工作人員"
 
