@@ -159,156 +159,156 @@
       <span>顧客兌換平台</span>
     </header>
 
-    <main>
-      <div class="card">
-        <h2>顧客兌換平台</h2>
-        <div id="selectedGameNotice">載入中...</div>
-        <form id="topupForm">
-          <label for="cardNumber">卡號</label>
-          <input
-            type="text"
-            class="input1"
-            id="cardNumber"
-            name="cardNumber"
-            required
-            placeholder="請輸入卡號"
-          />
+<main>
+  <div class="card">
+    <h2>顧客兌換平台</h2>
+    <div id="selectedGameNotice">尚未選擇遊戲</div>
+    <form id="topupForm">
+      <button type="button" id="chooseGameBtn" style="margin-bottom: 18px; width: 100%; background-color: #6366f1; border: none; color: white; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer;">
+        選擇遊戲
+      </button>
 
-          <label for="uid">UID</label>
-          <input
-            type="text"
-            class="input1"
-            id="uid"
-            name="uid"
-            required
-            placeholder="請輸入 UID"
-          />
+      <label for="cardNumber">卡號</label>
+      <input
+        type="text"
+        class="input1"
+        id="cardNumber"
+        name="cardNumber"
+        required
+        placeholder="請輸入卡號"
+      />
 
-          <label for="server">伺服器</label>
-          <select class="select1" id="server" name="server" required>
-            <option value="" disabled selected>請選擇伺服器</option>
-            <option value="Asia">亞洲</option>
-            <option value="America">美洲</option>
-            <option value="Europe">歐洲</option>
-            <option value="TW,HK,MO">台港澳</option>
-          </select>
+      <label for="uid">UID</label>
+      <input
+        type="text"
+        class="input1"
+        id="uid"
+        name="uid"
+        required
+        placeholder="請輸入 UID"
+      />
 
-          <button type="submit">立即儲值</button>
-        </form>
-      </div>
-    </main>
+      <label for="server">伺服器</label>
+      <select class="select1" id="server" name="server" required>
+        <option value="" disabled selected>請選擇伺服器</option>
+        <option value="Asia">亞洲</option>
+        <option value="America">美洲</option>
+        <option value="Europe">歐洲</option>
+        <option value="TW,HK,MO">台港澳</option>
+      </select>
 
-    <footer>© 2025 狸貓社群工作室. All rights reserved.｜V1.10</footer>
+      <!-- 隱藏欄位存放遊戲值 -->
+      <input type="hidden" name="game" id="gameInput" />
 
-    <script>
-      let selectedGame = null;
+      <button type="submit">立即儲值</button>
+    </form>
+  </div>
+</main>
 
-      window.addEventListener("DOMContentLoaded", async () => {
-        const form = document.getElementById("topupForm");
+<script>
+  let selectedGame = null;
 
-        const result = await Swal.fire({
-          title: "請選擇遊戲",
-          input: "select",
-          inputOptions: {
-            genshin: "原神",
-            starrail: "崩壞：星穹鐵道",
-            zzz: "絕區零",
-          },
-          inputPlaceholder: "請選擇",
-          confirmButtonText: "確認",
-          allowOutsideClick: false,
-          customClass: {
-            popup: "select2",
-          },
-          inputValidator: (value) => {
-            if (!value) return "請選擇一個遊戲";
-          },
-        });
+  const chooseGameBtn = document.getElementById("chooseGameBtn");
+  const selectedGameNotice = document.getElementById("selectedGameNotice");
+  const gameInput = document.getElementById("gameInput");
 
-        selectedGame = result.value;
+  const gameNameMap = {
+    genshin: "原神",
+    starrail: "崩壞：星穹鐵道",
+    zzz: "絕區零",
+  };
 
-        const gameInput = document.createElement("input");
-        gameInput.type = "hidden";
-        gameInput.name = "game";
-        gameInput.value = selectedGame;
-        form.appendChild(gameInput);
+  chooseGameBtn.addEventListener("click", async () => {
+    const result = await Swal.fire({
+      title: "請選擇遊戲",
+      input: "select",
+      inputOptions: {
+        genshin: "原神",
+        starrail: "崩壞：星穹鐵道",
+        zzz: "絕區零",
+      },
+      inputPlaceholder: "請選擇",
+      confirmButtonText: "確認",
+      allowOutsideClick: false,
+      inputValidator: (value) => {
+        if (!value) return "請選擇一個遊戲";
+      },
+    });
 
-        const gameNameMap = {
-          genshin: "原神",
-          starrail: "崩壞：星穹鐵道",
-          zzz: "絕區零",
-        };
-        document.getElementById(
-          "selectedGameNotice"
-        ).textContent = `✔ 已選擇遊戲：${gameNameMap[selectedGame]}`;
+    if (result.isConfirmed) {
+      selectedGame = result.value;
+      selectedGameNotice.textContent = `✔ 已選擇遊戲：${gameNameMap[selectedGame]}`;
+      gameInput.value = selectedGame;
+    }
+  });
+
+  const form = document.getElementById("topupForm");
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const data = {
+      cardNumber: form.cardNumber.value.trim(),
+      uid: form.uid.value.trim(),
+      server: form.server.value,
+      game: gameInput.value,
+    };
+
+    if (!data.cardNumber || !data.uid || !data.server || !data.game) {
+      Swal.fire({
+        icon: "warning",
+        title: "欄位未填寫",
+        text: "請完整填寫所有欄位",
+        confirmButtonText: "了解",
+      });
+      return;
+    }
+
+    Swal.fire({
+      title: "儲值中...",
+      html: "請稍候，此過程約需要一分鐘，請勿關閉網頁",
+      icon: "info",
+      allowOutsideClick: false,
+      showConfirmButton: false,
+      didOpen: () => Swal.showLoading(),
+    });
+
+    try {
+      const response = await fetch("/topup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
       });
 
-      const form = document.getElementById("topupForm");
-      form.addEventListener("submit", async (e) => {
-        e.preventDefault();
+      const result = await response.json();
 
-        const data = {
-          cardNumber: form.cardNumber.value.trim(),
-          uid: form.uid.value.trim(),
-          server: form.server.value,
-          game: selectedGame,
-        };
-
-        if (!data.cardNumber || !data.uid || !data.server || !data.game) {
-          Swal.fire({
-            icon: "warning",
-            title: "欄位未填寫",
-            text: "請完整填寫所有欄位",
-            confirmButtonText: "了解",
-          });
-          return;
-        }
-
+      if (result.success) {
         Swal.fire({
-          title: "儲值中...",
-          html: "請稍候，此過程約需要一分鐘，請勿關閉網頁",
-          icon: "info",
+          icon: "success",
+          title: "儲值完成 🎉",
+          html: "請重新開啟遊戲後<br>即可看到儲值內容！",
+          confirmButtonText: "確定",
           allowOutsideClick: false,
-          showConfirmButton: false,
-          didOpen: () => Swal.showLoading(),
+        }).then(() => {
+          window.location.href = "https://raccunity.com";
         });
-
-        try {
-          const response = await fetch("/topup", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data),
-          });
-
-          const result = await response.json();
-
-          if (result.success) {
-            Swal.fire({
-              icon: "success",
-              title: "儲值完成 🎉",
-              html: "請重新開啟遊戲後<br>即可看到儲值內容！",
-              confirmButtonText: "確定",
-              allowOutsideClick: false,
-            }).then(() => {
-              window.location.href = "https://raccunity.com";
-            });
-          } else {
-            Swal.fire({
-              icon: "error",
-              title: "儲值失敗",
-              text: result.message || "發生未知錯誤",
-              confirmButtonText: "關閉",
-            });
-          }
-        } catch (err) {
-          Swal.fire({
-            icon: "error",
-            title: "網路錯誤",
-            text: "請重試或聯繫工作人員",
-            confirmButtonText: "知道了",
-          });
-        }
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "儲值失敗",
+          text: result.message || "發生未知錯誤",
+          confirmButtonText: "關閉",
+        });
+      }
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "網路錯誤",
+        text: "請重試或聯繫工作人員",
+        confirmButtonText: "知道了",
       });
-    </script>
+    }
+  });
+</script>
+
   </body>
 </html>
