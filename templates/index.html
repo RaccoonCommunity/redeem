@@ -312,12 +312,12 @@
     const params = new URLSearchParams(window.location.search);
     return {
       game: params.get("game"),
-      cardNumber: params.get("card"),
+      card: params.get("card"),
     };
   }
 
   window.addEventListener("DOMContentLoaded", () => {
-    const { game, cardNumber } = getQueryParams();
+    const { game, card } = getQueryParams();
 
     if (game && gameNameMap[game]) {
       selectedGame = game;
@@ -325,10 +325,11 @@
       gameInput.value = game;
     }
 
-    if (cardNumber) {
-      document.getElementById("cardNumber").value = cardNumber;
+    if (card) {
+      document.getElementById("cardNumber").value = card;
     }
   });
+
 </script>
 </body>
 </html>
