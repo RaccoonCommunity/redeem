@@ -29,6 +29,10 @@ def save_used_orders(orders_set):
 def index():
     return render_template("index.html")
 
+@app.route("/index.html")
+def serve_index_html():
+    return render_template("index.html")
+
 @app.route("/topup", methods=["POST"])
 def topup():
     data = request.get_json()
