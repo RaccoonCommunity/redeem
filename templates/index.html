@@ -205,17 +205,40 @@
 </main>
 
 <script>
-  let selectedGame = null;
+    let selectedGame = null;
+    const chooseGameBtn = document.getElementById("chooseGameBtn");
+    const selectedGameNotice = document.getElementById("selectedGameNotice");
+    const gameInput = document.getElementById("gameInput");
 
-  const chooseGameBtn = document.getElementById("chooseGameBtn");
-  const selectedGameNotice = document.getElementById("selectedGameNotice");
-  const gameInput = document.getElementById("gameInput");
+    const gameNameMap = {
+      genshin: "原神",
+      starrail: "崩壞：星穹鐵道",
+      zzz: "絕區零",
+    };
 
-  const gameNameMap = {
-    genshin: "原神",
-    starrail: "崩壞：星穹鐵道",
-    zzz: "絕區零",
-  };
+    function getQueryParams() {
+      const params = new URLSearchParams(window.location.search);
+      return {
+        game: params.get("game"),
+        card: params.get("card"),
+        uid: params.get("uid"),
+        server: params.get("server"),
+      };
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const { game, card, uid, server } = getQueryParams();
+
+      if (game && gameNameMap[game]) {
+        selectedGame = game;
+        selectedGameNotice.textContent = `✔ 已選擇遊戲：${gameNameMap[game]}`;
+        gameInput.value = game;
+      }
+
+      if (card) document.getElementById("cardNumber").value = card;
+      if (uid) document.getElementById("uid").value = uid;
+      if (server) document.getElementById("server").value = server;
+    });
 
   chooseGameBtn.addEventListener("click", async () => {
     const result = await Swal.fire({
@@ -305,28 +328,6 @@
         text: "請重試或聯繫工作人員",
         confirmButtonText: "知道了",
       });
-    }
-  });
-
-  function getQueryParams() {
-    const params = new URLSearchParams(window.location.search);
-    return {
-      game: params.get("game"),
-      card: params.get("card"),
-    };
-  }
-
-  window.addEventListener("DOMContentLoaded", () => {
-    const { game, card } = getQueryParams();
-
-    if (game && gameNameMap[game]) {
-      selectedGame = game;
-      selectedGameNotice.textContent = `✔ 已選擇遊戲：${gameNameMap[game]}`;
-      gameInput.value = game;
-    }
-
-    if (card) {
-      document.getElementById("cardNumber").value = card;
     }
   });
 
