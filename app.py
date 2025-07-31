@@ -110,6 +110,6 @@ def selenium_api_check(data):
     finally:
         driver.quit()
 
-
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
