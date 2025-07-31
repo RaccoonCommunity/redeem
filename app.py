@@ -27,11 +27,9 @@ def save_used_orders(orders_set):
 
 @app.route("/")
 def index():
-    return render_template("index.html")
-
-@app.route("/index.html")
-def serve_index_html():
-    return render_template("index.html")
+    game = request.args.get('game', '')
+    card = request.args.get('card', '')
+    return render_template("index.html", game=game, card=card)
 
 @app.route("/topup", methods=["POST"])
 def topup():
