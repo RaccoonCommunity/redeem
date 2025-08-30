@@ -41,7 +41,7 @@ def selenium_api_check(data):
     used_orders = load_used_orders()
 
     options = Options()
-    options.add_argument('--headless')
+    # options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
@@ -53,11 +53,13 @@ def selenium_api_check(data):
     try:
         driver.get("https://xiaoxingshop.com/#/CustCardExchange")
         time.sleep(3)
+        driver.find_element(By.XPATH, '//*[@id="app"]/section/main/div/span[3]').click()
+        time.sleep(1)
 
         game_map = {
-            "genshin": '/html/body/div/section/main/div/span[3]',
-            "starrail": '/html/body/div/section/main/div/span[4]',
-            "zzz": '/html/body/div/section/main/div/span[5]',
+            "genshin": 'html/body/div/section/main/div[2]/span[1]',
+            "starrail": 'html/body/div/section/main/div[2]/span[2]',
+            "zzz": 'html/body/div/section/main/div[2]/span[3]',
         }
 
         driver.find_element(By.XPATH, game_map[data['game']]).click()
