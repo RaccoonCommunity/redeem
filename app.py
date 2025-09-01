@@ -46,7 +46,7 @@ def selenium_api_check(data):
     used_orders = load_used_orders()
 
     options = Options()
-    # options.add_argument('--headless')
+    options.add_argument('--headless')
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument(
